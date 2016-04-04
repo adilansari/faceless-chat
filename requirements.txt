@@ -1,0 +1,4 @@
+Flask
+mongokit
+pymongo==2.9.0
+pusher
