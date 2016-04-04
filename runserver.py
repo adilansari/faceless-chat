@@ -2,11 +2,13 @@ from flask import Flask, request
 from bson import ObjectId
 import json
 import time
+import os
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 DATABASE_NAME = 'chat'
 
+print os.environ['PUSHER_APP_ID']
 
 @app.route('/')
 def home():
@@ -19,4 +21,4 @@ def pixel():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True)
