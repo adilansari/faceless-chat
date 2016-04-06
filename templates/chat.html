@@ -1,15 +1,50 @@
 {% extends "template.html" %}
 {% block content %}
-    <div class="notification"></div>
+
+    <div id="wrapper">
+        <div id="menu">
+            <p class="welcome">Welcome, <b></b></p>
+            <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+            <div style="clear:both"></div>
+        </div>
+
+        <div class="notification"></div>
+        <div id="chatbox"></div>
+
+        <form name="message">
+            <input name="usermsg" type="text" id="usermsg" size="63" />
+            <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
+        </form>
+    </div>
+
     <script>
         var pusher = new Pusher({{ pusher_key }});
         var notificationsChannel = pusher.subscribe({{ channel_name }});
 
         notificationsChannel.bind({{ notification_event_name }}, function(notification){
             var message = notification.message;
-            $('div.notification').text(message);
+            $('div.chatbox').text(message);
         });
     </script>
 
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#submitmsg").click(function() {
+                var clientmsg = $("#usermsg").val();
+                $.post("publish", {message: clientmsg}, function ( data ){
+                    toastr.success(data.message);
+                });
+
+                $("#usermsg").attr("value", "");
+            return false;
+            });
+
+            //If user wants to end session
+            $("#exit").click(function(){
+                var exit = confirm("Are you sure you want to end the session?");
+                if(exit==true){window.location = 'index.php?logout=true';}
+            });
+        });
+    </script>
 {% endblock %}
 
