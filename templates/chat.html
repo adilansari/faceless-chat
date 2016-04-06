@@ -1,34 +1,22 @@
 {% extends "template.html" %}
 {% block content %}
 
-    <div id="wrapper">
-        <div id="menu">
-            <p class="welcome">Welcome, <b></b></p>
-            <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
-            <div style="clear:both"></div>
-        </div>
-
-        <div class="notification"></div>
-        <div id="chatbox"></div>
-
-        <form name="message">
-            <input name="usermsg" type="text" id="usermsg" size="63" />
-            <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
-        </form>
-    </div>
-
     <script>
-        var pusher = new Pusher({{ pusher_key }});
-        var notificationsChannel = pusher.subscribe({{ channel_name }});
 
-        notificationsChannel.bind({{ notification_event_name }}, function(notification){
-            var message = notification.message;
-            $('div.chatbox').text(message);
+        var pusher = new Pusher("{{ pusher_key }}");
+        var notificationsChannel = pusher.subscribe("{{ channel_name }}");
+
+        notificationsChannel.bind("{{ notification_event_name }}", function(notification){
+            var messageDiv = document.createElement("div");
+            messageDiv.className = "msgln";
+            messageDiv.innerHTML = "<br/> <br/>" + notification.message;
+
+            var chatDiv = document.getElementById("chatbox");
+            chatDiv.appendChild(messageDiv);
         });
-    </script>
 
-    <script type="text/javascript">
         $(document).ready(function(){
+
             $("#submitmsg").click(function() {
                 var clientmsg = $("#usermsg").val();
                 $.post("publish", {message: clientmsg}, function ( data ){
@@ -44,7 +32,25 @@
                 var exit = confirm("Are you sure you want to end the session?");
                 if(exit==true){window.location = 'index.php?logout=true';}
             });
+
         });
+
     </script>
+
+    <div id="wrapper">
+        <div id="menu">
+            <p class="welcome">Welcome, <b></b></p>
+            <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+            <div style="clear:both"></div>
+        </div>
+
+        <div class="notification"></div>
+        <div id="chatbox"></div>
+
+        <form name="message">
+            <input name="usermsg" type="text" id="usermsg" size="63" />
+            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+        </form>
+    </div>
 {% endblock %}
 
