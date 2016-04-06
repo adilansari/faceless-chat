@@ -1,0 +1,15 @@
+{% extends "template.html" %}
+{% block content %}
+    <div class="notification"></div>
+    <script>
+        var pusher = new Pusher({{ pusher_key }});
+        var notificationsChannel = pusher.subscribe({{ channel_name }});
+
+        notificationsChannel.bind({{ notification_event_name }}, function(notification){
+            var message = notification.message;
+            $('div.notification').text(message);
+        });
+    </script>
+
+{% endblock %}
+

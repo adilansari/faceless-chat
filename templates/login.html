@@ -1,0 +1,11 @@
+{% extends "template.html" %}
+{% block content %}
+    <div id="loginform">
+    <form action="login" method="post">
+        <p>Please enter your username to continue:</p>
+        <label for="name">userame:</label>
+        <input type="text" name="username" id="username" />
+        <input type="submit" name="enter" id="enter" value="Enter" />
+    </form>
+    </div>
+{% endblock %}
