@@ -8,4 +8,20 @@
         <input type="submit" name="enter" id="enter" value="Enter" />
     </form>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $("#s").click(function() {
+                var clientmsg = $("#usermsg").val();
+                $.post("publish", {message: clientmsg}, function ( data ){
+                    toastr.success(data.message);
+                });
+
+                $("#usermsg").attr("value", "");
+            return false;
+            });
+
+        });
+    </script>
 {% endblock %}
