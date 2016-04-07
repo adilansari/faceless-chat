@@ -7,15 +7,27 @@
         var notificationsChannel = pusher.subscribe("{{ channel_name }}");
 
         notificationsChannel.bind("{{ notification_event_name }}", function(notification){
+            var msg = "[" + getCurrentTime() + "] " + "<font color='blue'><b>" + notification.username +":</b></font> "+ notification.message;
+            appendMessage(msg);
+        });
+
+        notificationsChannel.bind("{{ login_event_name }}", function(notification){
+            var msg = "<i>" + notification.username + " " + notification.message + "</i>";
+            appendMessage(msg);
+        });
+
+        notificationsChannel.bind("{{ logout_event_name }}", function(notification){
+            var msg = "<i>" + notification.username + " " + notification.message + "</i>";
+            appendMessage(msg);
+        });
+
+        var appendMessage = function(htmlString) {
             var messageDiv = document.createElement("div");
             messageDiv.className = "msgln";
-            messageDiv.innerHTML = "[" + getCurrentTime() + "] " + "<font color='blue'><b>" + notification.username +"</b></font> "+ notification.message;
-            // var msg = "(" + getCurrentTime() + ") " + notification.message;
-            // messageDiv.appendChild(document.createTextNode(msg));
-
+            messageDiv.innerHTML = htmlString;
             var chatDiv = document.getElementById("chatbox");
             chatDiv.appendChild(messageDiv);
-        });
+        }
 
         var getCurrentTime = function() {
             var currentTime = new Date()
@@ -44,15 +56,8 @@
                 $.post("publish", {message: clientmsg}, function ( data ){
                     toastr.success(data.message);
                 });
-
                 $("#usermsg").attr("value", "");
-            return false;
-            });
-
-            //If user wants to end session
-            $("#exit").click(function(){
-                var exit = confirm("Are you sure you want to end the session?");
-                if(exit==true){$.post("logout");}
+                return false;
             });
         });
 
@@ -61,7 +66,9 @@
     <div id="wrapper">
         <div id="menu">
             <p class="welcome">Welcome, <b>{{ username }}</b></p>
-            <p class="logout"><a id="exit" href="#">Logout</a></p>
+            <form class="logout" action="logout" method="post" onsubmit="return confirm('Are you sure you want to end the session?');">
+                <input type="submit" id="exit" value="Logout"/>
+            </form>
             <div style="clear:both"></div>
         </div>
 
