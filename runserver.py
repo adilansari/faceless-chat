@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+app.secret_key = os.environ['FLASK_SECRET']
 app.debug = True
 
 CHANNEL_NAME = 'notifications'
@@ -14,9 +14,9 @@ LOGOUT_EVENT_NAME = 'user_left'
 
 
 pusher = Pusher(
-    app_id=os.environ.get('PUSHER_APP_ID', '194612'),
-    key=os.environ.get('PUSHER_KEY', 'f4ee88e008548564dbc5'),
-    secret=os.environ.get('PUSHER_SECRET', '920f9448c42e8ff5c49c')
+    app_id=os.environ['PUSHER_APP_ID'],
+    key=os.environ['PUSHER_KEY'],
+    secret=os.environ['PUSHER_SECRET']
 )
 
 
@@ -41,7 +41,7 @@ def chat():
     return render_template(
         'chat.html',
         username=get_username(),
-        pusher_key=os.environ.get('PUSHER_KEY', 'f4ee88e008548564dbc5'),
+        pusher_key=os.environ['PUSHER_KEY'],
         channel_name=CHANNEL_NAME,
         notification_event_name=NOTIFICATION_EVENT_NAME,
         login_event_name=LOGIN_EVENT_NAME,
