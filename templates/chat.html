@@ -9,7 +9,7 @@
         notificationsChannel.bind("{{ notification_event_name }}", function(notification){
             var messageDiv = document.createElement("div");
             messageDiv.className = "msgln";
-            messageDiv.innerHTML = "(" + getCurrentTime() + ") " + notification.message;
+            messageDiv.innerHTML = "[" + getCurrentTime() + "] " + "<b>" + notification.username +"</b> "+ notification.message;
             // var msg = "(" + getCurrentTime() + ") " + notification.message;
             // messageDiv.appendChild(document.createTextNode(msg));
 
@@ -52,17 +52,16 @@
             //If user wants to end session
             $("#exit").click(function(){
                 var exit = confirm("Are you sure you want to end the session?");
-                if(exit==true){window.location = 'index.php?logout=true';}
+                if(exit==true){$.post("logout");}
             });
-
         });
 
     </script>
 
     <div id="wrapper">
         <div id="menu">
-            <p class="welcome">Welcome, <b></b></p>
-            <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+            <p class="welcome">Welcome, <b>{{ username }}</b></p>
+            <p class="logout"><a id="exit" href="#">Logout</a></p>
             <div style="clear:both"></div>
         </div>
 
