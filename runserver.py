@@ -4,7 +4,8 @@ import os
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-DATABASE_NAME = 'chat'
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+app.debug = True
 
 CHANNEL_NAME = 'notifications'
 NOTIFICATION_EVENT_NAME = 'new_notification'
@@ -80,5 +81,4 @@ def logout_user():
     session.pop('username', None)
 
 if __name__ == '__main__':
-    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0')
