@@ -9,7 +9,7 @@
         notificationsChannel.bind("{{ notification_event_name }}", function(notification){
             var messageDiv = document.createElement("div");
             messageDiv.className = "msgln";
-            messageDiv.innerHTML = "[" + getCurrentTime() + "] " + "<b>" + notification.username +"</b> "+ notification.message;
+            messageDiv.innerHTML = "[" + getCurrentTime() + "] " + "<font color='blue'><b>" + notification.username +"</b></font> "+ notification.message;
             // var msg = "(" + getCurrentTime() + ") " + notification.message;
             // messageDiv.appendChild(document.createTextNode(msg));
 

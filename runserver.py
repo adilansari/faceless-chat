@@ -17,7 +17,7 @@ pusher = Pusher(
 
 
 @app.route('/')
-def home():
+def index():
     if is_logged_in():
         return redirect(url_for('chat.html'))
     else:
@@ -34,7 +34,7 @@ def login():
 @app.route('/chat')
 def chat():
     if not is_logged_in():
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
 
     return render_template(
         'chat.html',
@@ -56,14 +56,16 @@ def publish():
 @app.route('/logout', methods=['POST'])
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 
 def is_logged_in():
     return 'username' in session
 
+
 def get_username():
     return session['username']
+
 
 def login_user(username):
     print 'logging in {}'.format(username)
