@@ -8,6 +8,9 @@ DATABASE_NAME = 'chat'
 
 CHANNEL_NAME = 'notifications'
 NOTIFICATION_EVENT_NAME = 'new_notification'
+LOGIN_EVENT_NAME = 'new_user'
+LOGOUT_EVENT_NAME = 'user_left'
+
 
 pusher = Pusher(
     app_id=os.environ.get('PUSHER_APP_ID', '194612'),
@@ -18,16 +21,14 @@ pusher = Pusher(
 
 @app.route('/')
 def index():
-    if is_logged_in():
-        return redirect(url_for('chat.html'))
-    else:
-        return render_template('login.html')
+    return render_template('login.html')
 
 
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
     login_user(username)
+    pusher.trigger(CHANNEL_NAME, LOGIN_EVENT_NAME, {'username': username, 'message': 'has joined the chat room'})
     return redirect(url_for('chat'))
 
 
@@ -41,7 +42,9 @@ def chat():
         username=get_username(),
         pusher_key=os.environ.get('PUSHER_KEY', 'f4ee88e008548564dbc5'),
         channel_name=CHANNEL_NAME,
-        notification_event_name=NOTIFICATION_EVENT_NAME)
+        notification_event_name=NOTIFICATION_EVENT_NAME,
+        login_event_name=LOGIN_EVENT_NAME,
+        logout_event_name=LOGOUT_EVENT_NAME)
 
 
 @app.route('/publish', methods=['POST'])
@@ -55,7 +58,9 @@ def publish():
 
 @app.route('/logout', methods=['POST'])
 def logout():
+    username = get_username()
     logout_user()
+    pusher.trigger(CHANNEL_NAME, LOGOUT_EVENT_NAME, {'username': username, 'message': 'has left the chat room'})
     return redirect(url_for('index'))
 
 
@@ -68,12 +73,11 @@ def get_username():
 
 
 def login_user(username):
-    print 'logging in {}'.format(username)
     session['username'] = username
 
 
 def logout_user():
-    session.pop('username')
+    session.pop('username', None)
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
