@@ -56,7 +56,7 @@
                 $.post("publish", {message: clientmsg}, function ( data ){
                     toastr.success(data.message);
                 });
-                $("#usermsg").attr("value", "");
+                $("#usermsg").val("");
                 return false;
             });
         });
