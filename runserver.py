@@ -1,11 +1,13 @@
 from flask import *
 from pusher import Pusher
+from multiprocessing import Pool
 import os
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.secret_key = os.environ['FLASK_SECRET']
-app.debug = True
+app.debug = os.environ.get('DEBUG', False)
+
 
 CHANNEL_NAME = 'notifications'
 NOTIFICATION_EVENT_NAME = 'new_notification'
@@ -18,6 +20,13 @@ pusher = Pusher(
     key=os.environ['PUSHER_KEY'],
     secret=os.environ['PUSHER_SECRET']
 )
+
+
+def _trigger_push(username, message):
+    print 'here', message
+    pusher.trigger(CHANNEL_NAME, NOTIFICATION_EVENT_NAME, {'username': username, 'message': message})
+
+worker_pool = Pool(processes=os.environ.get('THREADPOOL_SIZE', 2))
 
 
 @app.route('/')
@@ -51,7 +60,7 @@ def chat():
 @app.route('/publish', methods=['POST'])
 def publish():
     message = request.form['message']
-    pusher.trigger(CHANNEL_NAME, NOTIFICATION_EVENT_NAME, {'username': get_username(), 'message': message})
+    worker_pool.apply_async(_trigger_push, [get_username(), message])
     response = jsonify(message='Message sent')
     response.status_code = 200
     return response
