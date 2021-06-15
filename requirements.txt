@@ -12,7 +12,7 @@ itsdangerous==0.24
 mongokit==0.9.1.1
 ndg-httpsclient==0.4.0
 pusher==1.2.3
-pyOpenSSL==16.0.0
+pyOpenSSL==17.5.0
 pyasn1==0.1.9
 pycparser==2.14
 pymongo==2.9
