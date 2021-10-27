@@ -16,7 +16,7 @@ pyOpenSSL==16.0.0
 pyasn1==0.1.9
 pycparser==2.14
 pymongo==2.9
-requests==2.9.1
+requests==2.20.0
 six==1.10.0
 urllib3==1.24.2
 wsgiref==0.1.2
